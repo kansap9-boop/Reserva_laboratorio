@@ -1,58 +1,76 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistema de Gestión de Laboratorios SRL-UNS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web transaccional desarrollado en PHP con Laravel 11 para la reserva y administración de laboratorios. Cuenta con control de concurrencia para evitar cruces de horarios, protección estricta basada en roles y un módulo de auditoría automatizado.
 
-## About Laravel
+## 🚀 Tecnologías
+* **Backend:** Laravel 11, PHP 8+
+* **Frontend:** Tailwind CSS, Blade, Vite (Diseño minimalista estilo Material/Apple)
+* **Base de Datos:** MySQL
+* **Autenticación:** Laravel Breeze
+* **Reportes:** DOMPDF
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ⚙️ Requisitos Previos
+Para ejecutar este proyecto en un entorno local, necesitas tener instalado:
+* [Laragon](https://laragon.org/) o XAMPP (Para PHP y MySQL)
+* [Composer](https://getcomposer.org/) (Gestor de dependencias de PHP)
+* [Node.js](https://nodejs.org/) (Para compilar Tailwind CSS)
+* [Git](https://git-scm.com/)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Instalación y Configuración
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+**1. Clonar el repositorio**
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/TU-USUARIO/sistema-reservas-laravel.git
+cd sistema-reservas-laravel
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**2. Instalar dependencias**
+```bash
+composer install
+npm install
+```
 
-## Contributing
+**3. Configurar variables de entorno**
+Duplica el archivo `.env.example`, renómbralo a `.env` y genera la clave de la aplicación:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+Abre el archivo `.env` y configura tu base de datos y drivers de sesión:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=reservasLab
+DB_USERNAME=root
+DB_PASSWORD=
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# IMPORTANTE: Usar 'file' para evitar errores de tablas faltantes
+SESSION_DRIVER=file
+CACHE_STORE=file
+```
 
-## Code of Conduct
+**4. Crear base de datos, migrar y poblar**
+Crea una base de datos vacía llamada `reservasLab` en tu gestor MySQL (ej. HeidiSQL). Luego ejecuta:
+```bash
+php artisan migrate --seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**5. Compilar frontend y levantar el servidor**
+Abre dos terminales y ejecuta:
+```bash
+# Terminal 1: Compila los estilos
+npm run dev
 
-## Security Vulnerabilities
+# Terminal 2: Inicia el servidor de Laravel
+php artisan serve
+```
+El proyecto estará disponible en `http://127.0.0.1:8000`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 👥 Credenciales de Prueba (Seeders)
+El comando `--seed` genera automáticamente la estructura de laboratorios y los siguientes usuarios de prueba (Contraseña para todos: `password123`):
+* **Admin:** `admin@uns.edu.pe` (Gestión total + CRUD de laboratorios)
+* **Profesor:** `docente@uns.edu.pe` (Registra y cancela reservas)
+* **Delegado:** `delegado@uns.edu.pe` (Registra y cancela reservas)
+* **Supervisor:** `supervisor@uns.edu.pe` (Visualiza auditoría y exporta PDF)
+* **Alumno:** `alumno@uns.edu.pe` (Solo lectura de disponibilidad)
